@@ -1,7 +1,7 @@
 import { fetchRolesAndMembers } from './data.js';
 
 const CACHE_KEY = 'discord_roles_data';
-const CACHE_EXPIRATION = 1800; // 30 minutes in seconds
+const CACHE_EXPIRATION = 1799; // 30 minutes in seconds
 
 const addCorsHeaders = (response) => {
   const newHeaders = new Headers(response.headers);
