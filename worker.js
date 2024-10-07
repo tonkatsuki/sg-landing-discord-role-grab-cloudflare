@@ -1,4 +1,4 @@
-import { fetchRolesAndMembers } from './data.js'; // Re-added this line
+import { fetchRolesAndMembers } from './data.js';
 
 const CACHE_KEY = 'discord_roles_data';
 const CACHE_EXPIRATION = 1800; // 30 minutes in seconds
@@ -26,9 +26,13 @@ const handleOptions = () => {
 
 const cachePut = async (cache, request, response) => {
   const expirationDate = new Date().getTime() + CACHE_EXPIRATION * 1000;
-  const clonedResponse = new Response(response.body, response); // Clone response without changing headers
-  await cache.put(request, clonedResponse); // Cache the response
-  // Store expiration as separate metadata (use KV, Durable Objects, or similar if needed)
+  const clonedResponse = new Response(await response.clone().text(), { // Clone the response's text
+    headers: response.headers,
+    status: response.status,
+  });
+  
+  await cache.put(request, clonedResponse); // Cache the cloned response
+  // Store expiration as separate metadata
   await cache.put(`${request.url}_expiration`, new Response(expirationDate.toString()));
 };
 
