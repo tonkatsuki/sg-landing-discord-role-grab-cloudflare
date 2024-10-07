@@ -1,5 +1,5 @@
-import { fetchRolesAndMembers } from './data.js';
-// aaaaa
+import { fetchRolesAndMembers } from './data.js'; // Re-added this line
+
 const CACHE_KEY = 'discord_roles_data';
 const CACHE_EXPIRATION = 1800; // 30 minutes in seconds
 
@@ -25,21 +25,28 @@ const handleOptions = () => {
 };
 
 const cachePut = async (cache, request, response) => {
-  const clonedResponse = response.clone();
   const expirationDate = new Date().getTime() + CACHE_EXPIRATION * 1000;
-  clonedResponse.headers.set('Cache-Expiration', expirationDate);
-  await cache.put(request, clonedResponse);
+  const clonedResponse = new Response(response.body, response); // Clone response without changing headers
+  await cache.put(request, clonedResponse); // Cache the response
+  // Store expiration as separate metadata (use KV, Durable Objects, or similar if needed)
+  await cache.put(`${request.url}_expiration`, new Response(expirationDate.toString()));
 };
 
 const cacheGet = async (cache, request) => {
   const cachedResponse = await cache.match(request);
   if (!cachedResponse) return null;
 
-  const expirationDate = cachedResponse.headers.get('Cache-Expiration');
+  // Retrieve the expiration metadata
+  const expirationDateResponse = await cache.match(`${request.url}_expiration`);
+  if (!expirationDateResponse) return null;
+  
+  const expirationDate = parseInt(await expirationDateResponse.text());
   if (new Date().getTime() > expirationDate) {
     await cache.delete(request);
+    await cache.delete(`${request.url}_expiration`);
     return null;
   }
+
   return cachedResponse;
 };
 
