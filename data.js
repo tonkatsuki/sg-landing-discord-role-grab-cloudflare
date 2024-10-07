@@ -38,7 +38,7 @@ function processRolesAndMembers(roles, members) {
                 if (member.roles.includes(role.id)) {
                     const avatarUrl = member.user.avatar ? `https://cdn.discordapp.com/avatars/${member.user.id}/${member.user.avatar}.png` : null;
                     roleData[role.name].members.push({
-                        name: member.nick || member.user.username,
+                        name: member.displayName || member.user.username,
                         avatar_url: avatarUrl
                     });
                 }
