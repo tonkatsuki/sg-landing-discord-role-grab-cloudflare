@@ -25,7 +25,7 @@ const handleOptions = () => {
 };
 
 const cachePut = async (cache, request, response) => {
-  const expirationDate = new Date().getTime() + CACHE_EXPIRATION * 1000;
+  const expirationDate = new Date().getTime() + CACHE_EXPIRATION * 1;
   const clonedResponse = new Response(await response.clone().text(), { // Clone the response's text
     headers: response.headers,
     status: response.status,
