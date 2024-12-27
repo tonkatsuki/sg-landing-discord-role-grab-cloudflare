@@ -1,4 +1,4 @@
-const SPECIFIC_ROLES = ['President', 'Vice President', 'Director', 'Administrative Officer', 'Technical Administrator', 'Server Administrator', 'Legend', 'Supporter', 'Nitro Booster'];
+const SPECIFIC_ROLES = ['President', 'Vice President', 'Director', 'Technical Administrator', 'Discord Mod', 'Server Administrator', 'Legend', 'Supporter', 'Nitro Booster'];
 
 async function fetchRolesAndMembers(DISCORD_BOT_TOKEN, GUILD_ID) {
   const rolesUrl = `https://discord.com/api/v10/guilds/${GUILD_ID}/roles`;
